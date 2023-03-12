@@ -1,0 +1,16 @@
+02/21/2023: really think about changing to vectors; implement delete(?)
+02/21/2023: flesh out job systems/ideas; think about changing 
+02/23/2023: test helloTriangle from vulkan
+03/05/2023: finish helloTriangle https://vulkan-tutorial.com/en/Drawing_a_triangle/Setup/Physical_devices_and_queue_families
+
+
+forseen/out of scrum:
+03/05/2023: write a vulkan handler class to get it out of main
+03/05/2023: write an A* function to enable pathing/distance of fighters around the map
+03/05/2023: add graphics device picking?
+
+
+Done:
+02/21/2023: variable size Battlefields
+02/21/2023: add battlemap file i/o
+03/05/2023: finish figuring out makefiles, successfully set up vulkan build environment with wsl
