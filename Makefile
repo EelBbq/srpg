@@ -13,8 +13,8 @@ SRC = src/main.cpp
 
 
 VulkanTest: src/main.cpp
-	x86_64-w64-mingw32-g++ $(CFLAGS) -o build/VulkanTest.exe $(SRC) $(LDFLAGS)
-	
+#x86_64-w64-mingw32-g++ -g $(CFLAGS) -o build/VulkanTest.exe $(SRC) $(LDFLAGS)
+	./make.bat	
 
 .PHONY: test clean
 
