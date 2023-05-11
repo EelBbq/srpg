@@ -15,15 +15,26 @@ class Battlefield{
     int numFighters;
     bool legalCoord(int x, int y);
 
+    bool isUnblocked(int x, int y);
+    int terrainDifficulty(int x, int y);
+
+    enum direction {UP, RIGHT, DOWN, LEFT};
+    bool hasDirection(int x, int y, direction dir);
+        bool hasUp(int x, int y);
+        bool hasRight(int x, int y);
+        bool hasDown(int x, int y);
+        bool hasLeft(int x, int y);
+
     struct DkjsXYNode{
         int x, y;   //absolute position xy
         int dist;   //shortest manhattan distance
         
         std::string toString(){
-            return "X: " + std::to_string(x) + " Y: " + std::to_string(y) + " Path Length: " + std::to_string(dist);
+            return "X: " + std::to_string(x) + " Y: " + std::to_string(y)/* + " Path Length: " + std::to_string(dist)*/;
         };
     };
 
+    //void Battlefield::djkExamineNode(int x, int y, int range, std::vector<Battlefield::DkjsXYNode>* knownCoords, std::vector<Battlefield::DkjsXYNode>* legalCoords);
     std::vector<DkjsXYNode> djkRange(int x0, int y0, int range);
     DkjsXYNode* findDkjsXYNode(std::vector<Battlefield::DkjsXYNode> xyNodeVect, int x, int y);
     bool hasDkjsXYNode(std::vector<Battlefield::DkjsXYNode> xyNodeVect, int x, int y);
