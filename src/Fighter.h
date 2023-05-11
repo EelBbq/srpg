@@ -8,6 +8,8 @@
             int hpMax;             //max health points
             int hp;                //current hp
 
+            int spd;               //movement speed
+
             int str;               //strength
             int con;               //constitution
             int agi;               //agility
@@ -37,6 +39,7 @@
             int getIntl();
             int getLuk();
             int getFai();
+            int getSpd();
             int getXp();
             int getLv();
             void setStr(int newStr);

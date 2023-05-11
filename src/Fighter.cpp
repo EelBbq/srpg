@@ -12,6 +12,8 @@ double ratioStr = 1.5;
 int hpMax;             //max health points
 int hp;                //current hp
 
+int spd;
+
 int str;               //strength
 int con;               //constitution
 int agi;               //agility
@@ -28,6 +30,8 @@ bool playerCharacter;
 
 Fighter::Fighter() {   
     name = "Default Fighter";
+
+    spd = 5;
 
     str = 10;
     con = 10;
@@ -48,6 +52,8 @@ Fighter::Fighter() {
 Fighter::Fighter(std::string fighterName, int strength, int constitution, int agility, int intelligence, int luck, int faith, bool playercharacter){
     
     name = fighterName;
+
+    spd = 5;
 
     str = strength;
     con = constitution;
@@ -110,6 +116,10 @@ int Fighter::getLuk(){
 
 int Fighter::getFai(){
     return fai;
+}
+
+int Fighter::getSpd(){
+    return spd;
 }
 
 //remove

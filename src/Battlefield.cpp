@@ -3,6 +3,9 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <cstdlib>
+#include <vector>
+#include <stdexcept>
 
 //upgrade to vectors?
 //array of posible locations for fighters
@@ -268,6 +271,277 @@
         }
 
         return retVal;
+    }
+    
+    enum direction {UP, RIGHT, DOWN, LEFT};
+
+    bool hasDirection(int x, int y, direction dir){
+        bool retValue = false;
+
+        switch (dir) {
+            case UP:
+                if(y >= 0){
+                    retValue = true;
+                }
+                break;
+            case RIGHT:
+                if(x < mapX){
+                    retValue = true;
+                }
+                break;
+            case DOWN:
+                if(y < mapY){
+                    retValue = true;
+                }
+                break;
+            case LEFT:
+                if(x >= 0){
+                    retValue = true;
+                }
+                break;
+            default: 
+                retValue = false;
+        }
+
+        return retValue;
+    }
+
+    bool hasUp(int x, int y){
+        return hasDirection(x, y, UP);
+    }
+    
+    bool hasRight(int x, int y){
+        return hasDirection(x, y, RIGHT);
+    }
+
+    bool hasDown(int x, int y){
+        return hasDirection(x, y, DOWN);
+    }
+
+    bool hasLeft(int x, int y){
+        return hasDirection(x, y, LEFT);
+    }
+
+    bool isUnblocked(int x, int y){
+        bool retBool = false;
+        switch (terrainMap[x][y]) {
+            case water:
+                retBool = false;
+                break;
+            case sky:
+                retBool = false;
+                break;
+            case mountain:
+                retBool = false;
+                break;
+            case ground:
+                retBool = true;
+                break;
+            case sand:
+                retBool = true;
+            default:
+                retBool = false;
+                break;
+        }
+        return retBool;
+    }
+
+//returns true if current position is the specified destination
+    bool isDestination(int x, int y, int x1, int y1) {
+        bool retBool = false;
+        if(x == x1 && y == y1){
+            retBool = true;
+        }
+        return retBool;
+    }
+
+    // class Tree {
+    //     class treeNode {
+    //         int x, y;
+    //         treeNode* parent;
+    //         std::vector<treeNode*> children;
+            
+    //         public:
+    //         bool hasXY(int targetX, int targetY){
+    //             bool retVal = false;
+                
+    //             //recursive
+    //             if(x == targetX && y == targetY){
+    //                 retVal = true;
+    //             }
+    //             else {
+    //                 for(int i = 0; i < children.size(); i++) {
+    //                     if(children[i]->hasXY(targetX, targetY)) {
+    //                         retVal = true;
+    //                     }
+    //                 }
+    //             }
+
+    //             return retVal;
+    //         }
+    //     };
+
+    //     treeNode* source;
+    //     int size = 0;
+
+    //     bool hasXY(int x, int y){
+    //         bool retVal = false;
+    //         if(size > 0){
+    //             retVal = source->hasXY(x, y);
+    //         }
+    //         return retVal;
+    //     }
+    // };
+
+//returns true if x and y are within the bounds of the map
+    bool Battlefield::legalCoord(int x, int y){
+        bool retValue = true;
+
+        if(x < 0 || x >= mapX) {
+            retValue = false;
+        }
+        if(y < 0 || y >= mapY) {
+            retValue = false;
+        }
+
+        return retValue;
+    }
+
+    bool Battlefield::hasDkjsXYNode(std::vector<Battlefield::DkjsXYNode> xyNodeVect, int x, int y){
+        bool retbool = false;
+        
+        for(int i = 0; i > xyNodeVect.size(); i++) {
+            if(xyNodeVect[i].x == x && xyNodeVect[i].y == y){
+                retbool = true;
+            }
+        }
+
+        return retbool;
+    }
+
+    Battlefield::DkjsXYNode* Battlefield::findDkjsXYNode(std::vector<Battlefield::DkjsXYNode> xyNodeVect, int x, int y){
+        Battlefield::DkjsXYNode* retNode;
+        
+        for(int i = 0; i > xyNodeVect.size(); i++) {
+            if(xyNodeVect[i].x == x && xyNodeVect[i].y == y){
+                retNode = &xyNodeVect[i];
+            }
+        }
+
+        return retNode;
+    }
+
+//returns list of coords that are accessible within a range around
+    std::vector<Battlefield::DkjsXYNode> Battlefield::djkRange(int x0, int y0, int range){
+        std::vector<DkjsXYNode> legalCoords;    //list of known legal nodes to be returned
+        std::vector<DkjsXYNode> knownCoords;    //list of known nodes to be explored
+        bool hasCoords = false;                  //sentinel bool for while loop
+
+        DkjsXYNode tempNode;
+        if(Battlefield::legalCoord(x0, y0)){
+            tempNode.x = x0;                    //create and add initial src node to known coords if legals 
+            tempNode.y = y0;
+            tempNode.dist = 0;
+            knownCoords.push_back(tempNode);    
+            hasCoords = true;                   //enable sentinel bool if legal coord
+        }
+        
+        while(hasCoords){
+            std::vector<DkjsXYNode> tempCoords;
+
+            for(int i = 0; i < knownCoords.size(); i++) {
+                if(knownCoords[i].dist <= range){
+                    legalCoords.push_back(knownCoords[i]);
+                    //store values of current node
+                    int xi = knownCoords[i].x;
+                    int yi = knownCoords[i].y;
+                    int disti = knownCoords[i].dist;
+//tons of redundancy, would be a good candidate to refactor
+                    if(hasUp(xi, yi)){                                                  //if up is a valid xy coordiant
+                        if(hasDkjsXYNode(legalCoords, xi, yi + 1) &&                    //check if there is a node for the xy coordinate above current
+                          (findDkjsXYNode(legalCoords, xi, yi + 1)->dist > disti)) {    //and if there is check if the node above's previous shortest path is longer than the current one
+                            findDkjsXYNode(legalCoords, xi, yi + 1)->dist = disti;      //if it is, replace previous distance for xy with current one
+                        } else {
+                            DkjsXYNode tempUp;                                          //if up not in legalCoords, define a new node for it and add it to tempCoords to be explored next while loop cycle
+                            tempUp.x = xi;       
+                            tempUp.y = yi + 1;
+                            tempUp.dist = disti + 1;
+                            tempCoords.push_back(tempUp);
+                        }
+                    }
+                    if(hasDown(xi, yi)){                                                //down
+                        if(hasDkjsXYNode(legalCoords, xi, yi - 1) &&
+                          (findDkjsXYNode(legalCoords, xi, yi - 1)->dist > disti)) {
+                            findDkjsXYNode(legalCoords, xi, yi - 1)->dist = disti;
+                        } else {
+                            DkjsXYNode tempDown;
+                            tempDown.x = xi;       
+                            tempDown.y = yi - 1;
+                            tempDown.dist = disti + 1;
+                            tempCoords.push_back(tempDown);
+                        }
+                    }
+                    if(hasLeft(xi, yi)){                                                //left
+                        if(hasDkjsXYNode(legalCoords, xi - 1, yi) &&
+                          (findDkjsXYNode(legalCoords, xi - 1, yi)->dist > disti)) {
+                            findDkjsXYNode(legalCoords, xi - 1, yi)->dist = disti;
+                        } else {
+                            DkjsXYNode tempLeft;
+                            tempLeft.x = xi - 1;       
+                            tempLeft.y = yi;
+                            tempLeft.dist = disti + 1;
+                            tempCoords.push_back(tempLeft);
+                        }
+                    }
+                    if(hasRight(xi, yi)){                                                //right
+                        if(hasDkjsXYNode(legalCoords, xi + 1, yi) &&
+                          (findDkjsXYNode(legalCoords, xi + 1, yi)->dist > disti)) {
+                            findDkjsXYNode(legalCoords, xi + 1, yi)->dist = disti;
+                        } else {
+                            DkjsXYNode tempRight;
+                            tempRight.x = xi + 1;       
+                            tempRight.y = yi;
+                            tempRight.dist = disti + 1;
+                            tempCoords.push_back(tempRight);
+                        }
+                    }
+                }
+            }//end for loop
+
+            //after iterating-through/exploring all of knownCoords and filling out tempCoords, update knownCoords to tempCoords for next iteration
+            knownCoords = tempCoords;
+
+            //if known coords runs out of nodes to explore, update sentinel bool hasCoords to quit out of while loop
+            if(knownCoords.size() == 0){
+                hasCoords = false;
+            }
+        }
+
+        return legalCoords;
+    }
+
+    void Battlefield::testDikjstras(){
+        int x0 = 5;
+        int y0 = 5;
+        int range = 3;
+        std::vector<DkjsXYNode> testList = djkRange(x0, y0, range);
+
+        std::cout << "Coords within 3 range of 5, 5:\n";
+        for(int i = 0; i < testList.size(); i++){
+            std::cout << testList[i].toString() + "\n";
+        }
+        std::cout << "\n";
+
+        x0 = 1;
+        y0 = 3;
+        range = 5;
+        testList = djkRange(x0, y0, range);
+
+        std::cout << "Coords within 5 range of 1, 3:\n";
+        for(int i = 0; i < testList.size(); i++){
+            std::cout << testList[i].toString() + "\n";
+        }
+        std::cout << "\n";
     }
 
     Battlefield::Terrain Battlefield::terrainAt(int x, int y){
