@@ -16,9 +16,9 @@
     Fighter* **fighterMap; //2d array to Fighter Pointers
 
 //terrain enum
-    enum Terrain {ground, sand, water, mountain, sky};
+    // enum Terrain {ground, sand, water, mountain, sky};
 
-    Terrain ** terrainMap;  //2d array of terrains
+    Battlefield::Terrain ** terrainMap;  //2d array of terrains
     
 
 
@@ -146,7 +146,7 @@
                 }
             }
 
-            //heinously ugly code pls help --make into own function?
+            //heinously ugly code --make into own function?
             while(getline(mapFile, line)){
                 const int NUM_ARGS = 9;        //number of arguments of fighter(args) + 2 for x, y
                 std::string args[NUM_ARGS];    //stores the arguments of addFighter and Fighter constructor in array
@@ -623,6 +623,14 @@
 
     Fighter* Battlefield::fighterAt(int x, int y){
         return fighterMap[x][y];
+    }
+
+    int Battlefield::getX(){
+        return mapX;
+    }
+
+    int Battlefield::getY(){
+        return mapY;
     }
 
     std::string Battlefield::toString(){

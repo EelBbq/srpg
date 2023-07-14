@@ -8,8 +8,7 @@
 class Battlefield{
     private:
     Fighter* ** fighterMap;     //2d array of fighter pointers
-    enum Terrain {ground, sand, water, mountain, sky};
-    Terrain ** terrainMap;      //2d array of terrain
+    //Terrain ** terrainMap;      //2d array of terrain
     int mapX;
     int mapY;
     int numFighters;
@@ -42,6 +41,8 @@ class Battlefield{
 
 
     public:
+    enum Terrain {ground, sand, water, mountain, sky};
+
     Battlefield();
     Battlefield(int x, int y);
     Battlefield(std::string fileName);
@@ -58,6 +59,8 @@ class Battlefield{
     
     void testDikjstras();
 
+    int getX();
+    int getY();
     std::string toString();
     //void deleteBattlefield();
 };

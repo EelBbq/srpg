@@ -10,7 +10,9 @@
 #include <stdlib.h> //srand, rand
 #include <time.h>   //time
 
+#include <optional>
 
+const int SPRITE_RESOLUTION = 64;
 
 double randomVal() {
     srand(time(NULL));
@@ -54,7 +56,70 @@ int battle(Fighter* fighter1, Fighter* fighter2) {
     return damage;
 }
 
+void spriteTerrain(Battlefield* bf, sf::Sprite* **terrainSpriteArr, int* xOut, int* yOut) {
+    int y = bf->getY();
+    int x = bf->getX();
 
+    if(xOut != nullptr){
+        xOut = &x;
+    }
+
+    if(yOut != nullptr){
+        yOut = &y;
+    }
+
+    terrainSpriteArr = new sf::Sprite* *[x];
+    for(int i = 0; i < x; i++) {
+        terrainSpriteArr[i] = new sf::Sprite* [y]; // build Columns
+    }
+
+    //load textures
+    sf::Texture grass;
+    if (!grass.loadFromFile("textures/grass.png"))
+    {
+        return;
+    }
+    sf::Texture sand;
+    if (!sand.loadFromFile("textures/sand.png"))
+    {
+        return;
+    }
+    sf::Texture missingTexture;
+    if (!sand.loadFromFile("textures/missingTexture.png"))
+    {
+        return;
+    }
+    
+    
+    //assign textures to sprites
+    for(int i; i < y; i++) {
+        for(int j; j < x; j++){
+            switch (bf->terrainAt(i, j)){
+                case Battlefield::Terrain::ground:
+                    terrainSpriteArr[i][j]->setTexture(grass);
+                    break;
+                case Battlefield::Terrain::sand:
+                    terrainSpriteArr[i][j]->setTexture(sand);
+                    break;
+                case Battlefield::Terrain::water:
+                case Battlefield::Terrain::mountain:
+                case Battlefield::Terrain::sky:
+                default:
+                    terrainSpriteArr[i][j]->setTexture(missingTexture);
+                    break;
+            }
+        }
+    }
+}
+
+void drawTerrain(sf::RenderWindow* window, sf::Sprite ***terrainSpriteArr, int sizeX, int sizeY){
+    for(int i = 0; i < sizeX; i++){
+        for(int j = 0; j < sizeY; j++){
+            terrainSpriteArr[i][j]->setPosition(i * SPRITE_RESOLUTION, j * SPRITE_RESOLUTION);
+            window->draw(terrainSpriteArr[i][j][0]);
+        }
+    }
+}
 
 
 int main() {
@@ -67,6 +132,7 @@ int main() {
     {
         return 0;
     }
+    texture.setRepeated(true);
     sf::Sprite sprite;
     sprite.setTexture(texture);
 
@@ -77,6 +143,17 @@ int main() {
     }
     sf::Sprite fighterSprite;
     fighterSprite.setTexture(fighterTexture);
+
+    Battlefield* battleMap2 = new Battlefield(10, 10);
+    sf::Sprite*** terrainSprites;
+    int terrainX;
+    int terrainY;
+    spriteTerrain(battleMap2, terrainSprites, &terrainX, &terrainY);
+    
+    
+    // std::cout << battleMap->toString();
+    // std::cout << "\n";
+    // std::cout << battleMap2->toString();
 
 
     // run the program as long as the window is open
@@ -99,7 +176,7 @@ int main() {
 
         // draw everything here...
         // window.draw(...);
-        window.draw(sprite);
+        drawTerrain(&window, terrainSprites, terrainX, terrainY);
         window.draw(fighterSprite);
 
 
@@ -127,11 +204,7 @@ int main() {
     // Battlefield* battleMap2 = new Battlefield("test");
     // std::cout << battleMap2->toString();
     
-    // Battlefield* battleMap2 = new Battlefield(10, 10);
     
-    // std::cout << battleMap->toString();
-    // std::cout << "\n";
-    // std::cout << battleMap2->toString();
 
 
 
