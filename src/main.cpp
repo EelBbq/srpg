@@ -1,25 +1,5 @@
-// //vulkan setup
-// #include <vulkan/vulkan.h>
-
-// #define GLFW_INCLUDE_VULKAN
-// #include <GLFW/glfw3.h>
-
-// #include <glm/glm.hpp>
-
-// #include <array>
-// #include <stdexcept>
-// #include <algorithm>
-// #include <vector>
-// #include <cstring>
-// #include <cstdlib>
-// #include <cstdint>
-// #include <limits>
-// #include <optional>
-// #include <set>
-//#include <iostream>
-
-// //pipeline
-// #include <fstream>
+//sfml
+#include <SFML/Graphics.hpp>
 
 //game
 #include <iostream>
@@ -79,14 +59,50 @@ int battle(Fighter* fighter1, Fighter* fighter2) {
 
 int main() {
 
-    // HelloTriangleApplication app;
+        // create the window
+    sf::RenderWindow window(sf::VideoMode(1920, 1080), "My window");
 
-    // try {
-    //     app.run();
-    // } catch (const std::exception& e) {
-    //     std::cerr << e.what() << std::endl;
-    //     return EXIT_FAILURE;
-    // }
+    sf::Texture texture;
+    if (!texture.loadFromFile("textures/grass.png"))
+    {
+        return 0;
+    }
+    sf::Sprite sprite;
+    sprite.setTexture(texture);
+
+    sf::Texture fighterTexture;
+    if (!fighterTexture.loadFromFile("textures/fighter.png"))
+    {
+        return 0;
+    }
+    sf::Sprite fighterSprite;
+    sprite.setTexture(fighterTexture);
+
+    // run the program as long as the window is open
+    while (window.isOpen())
+    {
+        // check all the window's events that were triggered since the last iteration of the loop
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            // "close requested" event: we close the window
+            if (event.type == sf::Event::Closed)
+                window.close();
+        }
+
+        // clear the window with black color
+        window.clear(sf::Color::Black);
+
+
+        // draw everything here...
+        // window.draw(...);
+        window.draw(sprite);
+        window.draw(fighterSprite);
+
+
+        // end the current frame
+        window.display();
+    }
 
     //fighter 1 and 2
     // Fighter* f1;
@@ -100,8 +116,8 @@ int main() {
     // std::cout << f3->toString();
 
 
-    Battlefield* battleMap = new Battlefield();
-    battleMap->testDikjstras();
+    // Battlefield* battleMap = new Battlefield();
+    // battleMap->testDikjstras();
     // battleMap->addFighter(1, 1, f3);
     // battleMap->addFighter(1, 3, f2);
     // battleMap->saveBattlefield("test");
