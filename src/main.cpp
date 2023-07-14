@@ -76,7 +76,8 @@ int main() {
         return 0;
     }
     sf::Sprite fighterSprite;
-    sprite.setTexture(fighterTexture);
+    fighterSprite.setTexture(fighterTexture);
+
 
     // run the program as long as the window is open
     while (window.isOpen())
@@ -89,6 +90,8 @@ int main() {
             if (event.type == sf::Event::Closed)
                 window.close();
         }
+
+        fighterSprite.setPosition(0.0f, 64.0f);
 
         // clear the window with black color
         window.clear(sf::Color::Black);
