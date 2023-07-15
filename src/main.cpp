@@ -60,13 +60,7 @@ void spriteTerrain(Battlefield* bf, sf::Sprite* **terrainSpriteArr, int* xOut, i
     int y = bf->getY();
     int x = bf->getX();
 
-    if(xOut != nullptr){
-        xOut = &x;
-    }
-
-    if(yOut != nullptr){
-        yOut = &y;
-    }
+    
 
     terrainSpriteArr = new sf::Sprite* *[x];
     for(int i = 0; i < x; i++) {
@@ -85,29 +79,33 @@ void spriteTerrain(Battlefield* bf, sf::Sprite* **terrainSpriteArr, int* xOut, i
         return;
     }
     sf::Texture missingTexture;
-    if (!sand.loadFromFile("textures/missingTexture.png"))
+    if (!missingTexture.loadFromFile("textures/missingTexture.png"))
     {
         return;
     }
     
-    
     //assign textures to sprites
-    for(int i; i < y; i++) {
-        for(int j; j < x; j++){
+    for(int i = 0; i < y; i++) {
+        
+        for(int j = 0; j < x; j++){                
+            sf::Sprite tempSprite;
+
             switch (bf->terrainAt(i, j)){
                 case Battlefield::Terrain::ground:
-                    terrainSpriteArr[i][j]->setTexture(grass);
+                    tempSprite.setTexture(grass);
                     break;
                 case Battlefield::Terrain::sand:
-                    terrainSpriteArr[i][j]->setTexture(sand);
+                    tempSprite.setTexture(sand);
                     break;
                 case Battlefield::Terrain::water:
                 case Battlefield::Terrain::mountain:
                 case Battlefield::Terrain::sky:
                 default:
-                    terrainSpriteArr[i][j]->setTexture(missingTexture);
+                    tempSprite.setTexture(missingTexture);
                     break;
             }
+
+            terrainSpriteArr[i][j] = &tempSprite;
         }
     }
 }
@@ -115,8 +113,17 @@ void spriteTerrain(Battlefield* bf, sf::Sprite* **terrainSpriteArr, int* xOut, i
 void drawTerrain(sf::RenderWindow* window, sf::Sprite ***terrainSpriteArr, int sizeX, int sizeY){
     for(int i = 0; i < sizeX; i++){
         for(int j = 0; j < sizeY; j++){
-            terrainSpriteArr[i][j]->setPosition(i * SPRITE_RESOLUTION, j * SPRITE_RESOLUTION);
-            window->draw(terrainSpriteArr[i][j][0]);
+            std::cout << "sizeX: " << sizeX << "\n";
+            std::cout << "sizeY: " << sizeY << "\n";
+            std::cout << "i: " << i << "\n";
+            std::cout << "j: " << j << "\n";
+            sf::Sprite* tempSprite;
+            terrainSpriteArr[i][j];
+            //sf::Sprite* tempSprite = terrainSpriteArr[i][j];
+            std::cout << "sizeX: " << sizeX << "\n";
+            std::cout << "sizeY: " << sizeY << "\n";
+            tempSprite->setPosition(i * SPRITE_RESOLUTION, j * SPRITE_RESOLUTION);
+            window->draw(tempSprite[0]);
         }
     }
 }
@@ -124,7 +131,7 @@ void drawTerrain(sf::RenderWindow* window, sf::Sprite ***terrainSpriteArr, int s
 
 int main() {
 
-        // create the window
+    // create the window
     sf::RenderWindow window(sf::VideoMode(1920, 1080), "My window");
 
     sf::Texture texture;
@@ -146,9 +153,10 @@ int main() {
 
     Battlefield* battleMap2 = new Battlefield(10, 10);
     sf::Sprite*** terrainSprites;
-    int terrainX;
-    int terrainY;
-    spriteTerrain(battleMap2, terrainSprites, &terrainX, &terrainY);
+    int terrainX = battleMap2->getX();
+    int terrainY = battleMap2->getY();
+    spriteTerrain(battleMap2, terrainSprites, nullptr, nullptr);
+    
     
     
     // std::cout << battleMap->toString();
