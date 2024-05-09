@@ -85,6 +85,7 @@ void Fighter::levelUp(){
     luk += 1;
     fai += 1;
     xp -= 100;
+    lv += 1;
 }
 
 int Fighter::getHp(){

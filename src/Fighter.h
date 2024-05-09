@@ -21,6 +21,8 @@
             int lv;                //level
             void levelUp();
 
+
+
             bool playerCharacter;
 
         public:

@@ -184,7 +184,7 @@ int main() {
 
         // draw everything here...
         // window.draw(...);
-        drawTerrain(&window, terrainSprites, terrainX, terrainY);
+        //drawTerrain(&window, terrainSprites, terrainX, terrainY);
         window.draw(fighterSprite);
 
 

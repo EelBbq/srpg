@@ -1,26 +1,25 @@
-const double warrior[6] = {
-    /*strength      */      0.8,
-    /*constitution  */      0.6,
-    /*agility       */      0.4,
-    /*intelligence  */      0.3,
-    /*luck          */      0.4,
-    /*faith         */      0.3
-};
+// #include "Job.h"
 
-const double mage[6] = {
-    /*strength      */      0.3,
-    /*constitution  */      0.3,
-    /*agility       */      0.5,
-    /*intelligence  */      0.8,
-    /*luck          */      0.4,
-    /*faith         */      0.5
-};
+// class Job{
+//     // double strengthBase = 0;
+//     // double constitutionBase = 0;
+//     // double agilityBase = 0;
+//     // double intelligenceBase = 0;
+//     // double luckBase = 0;
+//     // double faithBase = 0;
+//     // double strengthRate = 0;
+//     // double constitutionRate = 0;
+//     // double agilityRate = 0;
+//     // double intelligenceRate = 0;
+//     // double luckRate = 0;
+//     // double faithRate = 0;
+//     // int    moveSpeed = 0;
+// };
 
-const double assasin[6] = {
-    /*strength      */      0.5,
-    /*constitution  */      0.4,
-    /*agility       */      0.8,
-    /*intelligence  */      0.5,
-    /*luck          */      0.8,
-    /*faith         */      0.4
-};
+// class Warrior : public Job {
+    
+//     this->strengthBase
+    
+    
+// };
+
